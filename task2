@@ -1,0 +1,30 @@
+---
+- name: java and maven
+  hosts: dev
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install java
+      yum:
+        name: java-17
+        state: present
+    - name: file tranfer
+      copy:
+        src: /home/ansible/maven.sh
+        dest: /home/ansible
+    - name: execute file
+      shell: sh maven.sh
+
+
+
+
+-----------------maven.sh-------------------------------------------
+
+
+#!/bin/bash
+
+
+sudo wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+sudo tar -zxvf apache-maven-3.9.9-bin.tar.gz
+sudo mv apache-maven-3.9.9 maven
