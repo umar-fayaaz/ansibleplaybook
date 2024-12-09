@@ -1,0 +1,32 @@
+---
+- name: docker
+  hosts: dev
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: transfer file docker
+      copy:
+        src: /home/ansible/docker.sh
+        dest: /home/ansible/
+    - name: execute the file
+      shell: sh docker.sh
+    - name: pull image
+      shell: docker pull nginx
+    - name: create container
+      shell: docker run -it -d --name web nginx
+
+
+------------------------------docker.sh-----------------------------
+
+sudo yum update -y
+sudo yum search docker
+sudo yum info docker
+sudo yum install -y docker
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+sudo systemctl status docker.service
+docker --version
+sudo yum install git -y
+sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
