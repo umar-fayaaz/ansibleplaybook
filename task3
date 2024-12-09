@@ -1,0 +1,42 @@
+---
+- name: java and maven
+  hosts: dev
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install java
+      yum:
+        name: java-17
+        state: present
+    - name: file tranfer maven
+      copy:
+        src: /home/ansible/maven.sh
+        dest: /home/ansible
+    - name: execute file to install maven
+      shell: sh maven.sh
+    - name: file tranfer jenkins
+      copy:
+        src: /home/ansible/jenkins.sh
+        dest: /home/ansible
+    - name: execute file to install jenkins
+      shell: sh jenkins.sh
+
+-----------------maven.sh--------------------------
+#!/bin/bash
+
+
+sudo wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+sudo tar -zxvf apache-maven-3.9.9-bin.tar.gz
+sudo mv apache-maven-3.9.9 maven4
+
+---------------jenkins.sh---------------------------
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum upgrade -y
+sudo yum install fontconfig java-17-openjdk -y
+sudo yum install jenkins -y
+sudo systemctl daemon-reload
+sudo systemctl start jenkins
+
