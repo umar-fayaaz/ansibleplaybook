@@ -1,0 +1,42 @@
+---
+- name: First task
+  hosts: dev
+  user: ansible
+  become: yes
+  connection: ssh
+  vars:
+    pkgname: /home/ansible/gittt1
+  tasks:
+    - name: Install git
+      yum:
+        name: git
+        state: present
+
+    - name: Create a directory for the git repository
+      file:
+        path: "{{ pkgname }}"
+        state: directory
+
+    - name: Initialize a git repository
+      git:
+        repo: https://github.com/punit-appi/profile.git
+        dest: "{{ pkgname }}"
+        bare: no
+        version: main
+
+    - name: Configure git user name
+      command: git config user.name "punit-appi"
+      args:
+        chdir: "{{ pkgname }}"
+
+    - name: Configure git user email
+      command: git config user.email "punitg169@gmail.com"
+      args:
+        chdir: "{{ pkgname }}"
+
+    - name: Pull the latest code
+      git:
+        repo: https://github.com/punit-appi/profile.git
+        dest: "{{ pkgname }}"
+        version: main
+        force: yes
