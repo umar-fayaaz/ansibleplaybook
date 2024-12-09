@@ -1,0 +1,13 @@
+---
+- name: tranfer file
+  hosts: dev
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: copy shell file
+      copy:
+        src: /home/ansible/task.sh
+        dest: /home/ansible/
+    - name: execute shell
+      shell: sh task.sh
